@@ -28,4 +28,10 @@ productSchema.pre("find", function (next) {
   next();
 });
 
+// pre hook to return the single non-deleted product
+productSchema.pre("aggregate", function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: false } });
+  next();
+});
+
 export const productModel = model<TProduct>("Product", productSchema);
