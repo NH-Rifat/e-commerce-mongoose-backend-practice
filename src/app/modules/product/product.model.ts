@@ -22,4 +22,10 @@ const productSchema = new Schema<TProduct>({
   isDeleted: { type: Boolean, required: true },
 });
 
+// pre hook to return only non-deleted products
+productSchema.pre("find", function (next) {
+  this.find({ isDeleted: false });
+  next();
+});
+
 export const productModel = model<TProduct>("Product", productSchema);
