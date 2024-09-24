@@ -21,8 +21,38 @@ const getProductByIdFromDB = async (productId: string) => {
   return product;
 };
 
+const updateProductByIdInDB = async (
+  productId: string,
+  productData: TProduct
+) => {
+  const objectId = new mongoose.Types.ObjectId(productId);
+  const updatedProduct = await productModel.findByIdAndUpdate(
+    objectId,
+    productData,
+    { new: true, runValidators: true }
+  );
+  if (!updatedProduct) {
+    throw new Error("Product not found");
+  }
+  return updatedProduct;
+};
+
+const deleteProductByIdFromDB = async (productId: string) => {
+  const objectId = new mongoose.Types.ObjectId(productId);
+  const deletedProduct = await productModel.updateOne(
+    { _id: objectId },
+    { isDeleted: true }
+  );
+  if (!deletedProduct) {
+    throw new Error("Product not found");
+  }
+  return deletedProduct;
+};
+
 export const productService = {
   createProductIntoDB,
   getAllProductsFromDB,
   getProductByIdFromDB,
+  updateProductByIdInDB,
+  deleteProductByIdFromDB,
 };

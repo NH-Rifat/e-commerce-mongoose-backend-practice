@@ -59,8 +59,52 @@ const getProductById = async (req: Request, res: Response) => {
   }
 };
 
+const updateProductById = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    const productData = req.body;
+    const zodParseData = productValidationSchema.parse(productData);
+    const updatedProduct = await productService.updateProductByIdInDB(
+      productId,
+      zodParseData
+    );
+    res.status(200).json({
+      success: true,
+      message: "Product updated successfully",
+      data: updatedProduct,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "Failed to update product",
+      error: error,
+    });
+  }
+};
+
+const deleteProductById = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    const deletedProduct =
+      await productService.deleteProductByIdFromDB(productId);
+    res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+      data: deletedProduct,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "Failed to delete product",
+      error: error,
+    });
+  }
+};
+
 export const productController = {
   createProduct,
   getAllProducts,
   getProductById,
+  updateProductById,
+  deleteProductById,
 };
