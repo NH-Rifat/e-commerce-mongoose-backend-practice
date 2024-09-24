@@ -11,7 +11,7 @@ const InventorySchema = new Schema<TInventory>({
   inStock: { type: Boolean, required: true },
 });
 
-const productSchema = new Schema<TProduct>({
+export const productSchema = new Schema<TProduct>({
   name: { type: String, required: true },
   description: { type: String, required: true },
   price: { type: Number, required: true },
