@@ -106,6 +106,13 @@ const updateProductById = async (req: Request, res: Response) => {
 const deleteProductById = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid product ID",
+        data: null,
+      });
+    }
     const deletedProduct =
       await productService.deleteProductByIdFromDB(productId);
     res.status(200).json({

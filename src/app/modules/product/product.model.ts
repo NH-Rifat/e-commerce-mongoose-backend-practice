@@ -77,6 +77,25 @@ productSchema.pre("findOneAndUpdate", async function (next) {
 
   next();
 });
+// pre hook to check if the product exists before updating or not deleted
+productSchema.pre("updateOne", async function (next) {
+  // Get the productId from the query
+  const productId = this.getQuery()["_id"];
+  // Find the product
+  const product = await this.model.findById(productId);
+
+  // Product does not exist
+  if (!product) {
+    return next(new Error("Product not found"));
+  }
+
+  // Product is marked as deleted
+  if (product.isDeleted) {
+    return next(new Error("Product is already deleted"));
+  }
+
+  next();
+});
 
 // pre hook to return the single non-deleted product
 productSchema.pre("aggregate", function (next) {
