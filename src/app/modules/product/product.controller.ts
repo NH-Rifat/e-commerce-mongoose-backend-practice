@@ -3,6 +3,7 @@
 import { Request, Response } from "express";
 import { productValidationSchema } from "./product.validation";
 import { productService } from "./product.service";
+import mongoose from "mongoose";
 
 const createProduct = async (req: Request, res: Response) => {
   try {
@@ -47,6 +48,13 @@ const getAllProducts = async (req: Request, res: Response) => {
 const getProductById = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid product ID",
+        data: null,
+      });
+    }
     const product = await productService.getProductByIdFromDB(productId);
     res.status(200).json({
       success: true,
@@ -65,7 +73,14 @@ const getProductById = async (req: Request, res: Response) => {
 const updateProductById = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-    // const productData = req.body;
+    // Validate the productId as a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid product ID",
+        data: null,
+      });
+    }
     const productPartialValidationSchema = productValidationSchema.partial();
 
     const productData = productPartialValidationSchema.parse(req.body);

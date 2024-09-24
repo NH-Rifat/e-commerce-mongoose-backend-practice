@@ -8,7 +8,7 @@ const createProductIntoDB = async (productData: TProduct) => {
 };
 
 const getAllProductsFromDB = async (searchTerm?: string) => {
-  // Just pass the search term as an option and let the middleware handle it
+  //passing the search term and middleware will handle it
   const products = await productModel.find().setOptions({ searchTerm });
   return products;
 };
