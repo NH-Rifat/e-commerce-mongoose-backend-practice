@@ -28,6 +28,36 @@ productSchema.pre("find", function (next) {
   next();
 });
 
+// pre hook to handle searchTerm filtering
+productSchema.pre("find", function (next) {
+  const searchTerm = this.getOptions().searchTerm as string | undefined;
+
+  if (searchTerm) {
+    const regex = { $regex: searchTerm, $options: "i" };
+    const searchTermAsNumber = parseFloat(searchTerm);
+
+    // Build the query for searchTerm
+    this.find({
+      $or: [
+        { name: regex },
+        { description: regex },
+        { category: regex },
+        { tags: regex },
+        { "variants.type": regex },
+        { "variants.value": regex },
+        ...(isNaN(searchTermAsNumber)
+          ? [] // Do not search for price or inventory if searchTerm is not a number
+          : [
+              { price: searchTermAsNumber },
+              { "inventory.quantity": searchTermAsNumber },
+            ]),
+      ],
+    });
+  }
+
+  next();
+});
+
 // pre hook to return the single non-deleted product
 productSchema.pre("aggregate", function (next) {
   this.pipeline().unshift({ $match: { isDeleted: false } });

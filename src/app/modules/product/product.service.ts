@@ -7,8 +7,9 @@ const createProductIntoDB = async (productData: TProduct) => {
   return newProduct;
 };
 
-const getAllProductsFromDB = async () => {
-  const products = await productModel.find();
+const getAllProductsFromDB = async (searchTerm?: string) => {
+  // Just pass the search term as an option and let the middleware handle it
+  const products = await productModel.find().setOptions({ searchTerm });
   return products;
 };
 
@@ -36,6 +37,8 @@ const getProductByIdFromDB = async (productId: string) => {
 //   }
 //   return updatedProduct;
 // };
+
+// update product by id with partial data
 const updateProductByIdInDB = async (
   productId: string,
   productData: Partial<TProduct> // Use Partial to allow updating individual fields
