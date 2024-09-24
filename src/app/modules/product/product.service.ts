@@ -21,19 +21,38 @@ const getProductByIdFromDB = async (productId: string) => {
   return product;
 };
 
+// const updateProductByIdInDB = async (
+//   productId: string,
+//   productData: TProduct
+// ) => {
+//   const objectId = new mongoose.Types.ObjectId(productId);
+//   const updatedProduct = await productModel.findByIdAndUpdate(
+//     objectId,
+//     productData,
+//     { new: true, runValidators: true }
+//   );
+//   if (!updatedProduct) {
+//     throw new Error("Product not found");
+//   }
+//   return updatedProduct;
+// };
 const updateProductByIdInDB = async (
   productId: string,
-  productData: TProduct
+  productData: Partial<TProduct> // Use Partial to allow updating individual fields
 ) => {
   const objectId = new mongoose.Types.ObjectId(productId);
+
+  // Using $set to only update the fields provided in the productData
   const updatedProduct = await productModel.findByIdAndUpdate(
     objectId,
-    productData,
+    { $set: productData },
     { new: true, runValidators: true }
   );
+
   if (!updatedProduct) {
     throw new Error("Product not found");
   }
+
   return updatedProduct;
 };
 

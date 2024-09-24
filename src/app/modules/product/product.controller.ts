@@ -62,11 +62,14 @@ const getProductById = async (req: Request, res: Response) => {
 const updateProductById = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-    const productData = req.body;
-    const zodParseData = productValidationSchema.parse(productData);
+    // const productData = req.body;
+    const productPartialValidationSchema = productValidationSchema.partial();
+
+    const productData = productPartialValidationSchema.parse(req.body);
+
     const updatedProduct = await productService.updateProductByIdInDB(
       productId,
-      zodParseData
+      productData
     );
     res.status(200).json({
       success: true,
