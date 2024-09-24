@@ -23,6 +23,25 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
+const getAllOrders = async (req: Request, res: Response) => {
+  try {
+    const orders = await orderService.getAllOrdersFromDB();
+
+    res.status(200).json({
+      success: true,
+      message: "Orders fetched successfully!",
+      data: orders,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "Failed to fetch orders",
+      error,
+    });
+  }
+};
+
 export const orderController = {
   createOrder,
+  getAllOrders,
 };
