@@ -1,15 +1,17 @@
 <!-- provide a clear instructions on how to run the application locally. -->
 
-## instructions on how to run the application locally.
+## Instructions on How to run the Application Locally.
+
+### if you use npm then execute
 
 ```javascript
-### if you use npm then execute
 npm run start:dev
 
 ```
 
-```javascript
 ### or if you want to use yarn then execute
+
+```javascript
 yarn start:dev
 
 ```
